@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}대시보드 (Dashboard){% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mb-4">
+        <i class="fas fa-home"></i> 대시보드 (Dashboard)
+    </h1>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">활성 고객</h6>
+                            <h2 class="card-title mb-0">{{ stats.total_customers }}</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-users fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="{{ url_for('sales.customers') }}" class="text-white text-decoration-none">
+                        상세보기 <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">제품</h6>
+                            <h2 class="card-title mb-0">{{ stats.total_products }}</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-boxes fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="{{ url_for('inventory.products') }}" class="text-white text-decoration-none">
+                        상세보기 <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">대기중인 주문</h6>
+                            <h2 class="card-title mb-0">{{ stats.pending_orders }}</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-shopping-cart fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="{{ url_for('sales.index') }}" class="text-dark text-decoration-none">
+                        상세보기 <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">열린 서비스 티켓</h6>
+                            <h2 class="card-title mb-0">{{ stats.open_tickets }}</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-tools fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="{{ url_for('service.index') }}" class="text-white text-decoration-none">
+                        상세보기 <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Orders -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-shopping-cart"></i> 최근 판매 주문</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_orders %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>주문번호</th>
+                                        <th>고객</th>
+                                        <th>상태</th>
+                                        <th>금액</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in recent_orders %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url_for('sales.order_detail', order_id=order.id) }}">
+                                                {{ order.order_number }}
+                                            </a>
+                                        </td>
+                                        <td>{{ order.customer.company_name if order.customer else '-' }}</td>
+                                        <td><span class="badge bg-info">{{ order.status }}</span></td>
+                                        <td>₩{{ "{:,.0f}".format(order.total_amount or 0) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">주문이 없습니다.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Service Tickets -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-tools"></i> 최근 서비스 티켓</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_tickets %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>티켓번호</th>
+                                        <th>고객</th>
+                                        <th>우선순위</th>
+                                        <th>상태</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ticket in recent_tickets %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url_for('service.ticket_detail', ticket_id=ticket.id) }}">
+                                                {{ ticket.ticket_number }}
+                                            </a>
+                                        </td>
+                                        <td>{{ ticket.customer.company_name if ticket.customer else '-' }}</td>
+                                        <td><span class="badge bg-warning">{{ ticket.priority }}</span></td>
+                                        <td><span class="badge bg-success">{{ ticket.status }}</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">서비스 티켓이 없습니다.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> 빠른 작업</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('sales.new_order') }}" class="btn btn-primary me-2 mb-2">
+                        <i class="fas fa-plus"></i> 새 판매 주문
+                    </a>
+                    <a href="{{ url_for('purchasing.new_order') }}" class="btn btn-success me-2 mb-2">
+                        <i class="fas fa-plus"></i> 새 구매 주문
+                    </a>
+                    <a href="{{ url_for('service.new_ticket') }}" class="btn btn-warning me-2 mb-2">
+                        <i class="fas fa-plus"></i> 새 서비스 티켓
+                    </a>
+                    <a href="{{ url_for('crm.new_customer') }}" class="btn btn-info me-2 mb-2">
+                        <i class="fas fa-plus"></i> 새 고객
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

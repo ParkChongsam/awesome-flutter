@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row min-vh-100 align-items-center">
+        <div class="col-md-8 mx-auto text-center">
+            <h1 class="display-3 mb-4">
+                <i class="fas fa-copy text-primary"></i>
+            </h1>
+            <h2 class="mb-4">{{ company_name }}</h2>
+            <h3 class="text-muted mb-5">{{ company_name_en }}</h3>
+            <p class="lead mb-5">복사기 판매 및 유지보수를 위한 통합 ERP 시스템</p>
+
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-home"></i> 대시보드로 이동
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-sign-in-alt"></i> 로그인
+                    </a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-secondary btn-lg px-5">
+                        <i class="fas fa-user-plus"></i> 회원가입
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="row mt-5 pt-5">
+                <div class="col-md-3">
+                    <i class="fas fa-boxes fa-3x text-primary mb-3"></i>
+                    <h5>재고관리</h5>
+                    <p class="text-muted">Inventory Management</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-shopping-cart fa-3x text-success mb-3"></i>
+                    <h5>판매관리</h5>
+                    <p class="text-muted">Sales Management</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-tools fa-3x text-warning mb-3"></i>
+                    <h5>서비스관리</h5>
+                    <p class="text-muted">Service Management</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                    <h5>분석 및 보고</h5>
+                    <p class="text-muted">Analytics & Reports</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
