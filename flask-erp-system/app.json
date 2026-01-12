@@ -1,0 +1,38 @@
+{
+  "name": "Flask ERP System - 참좋은복사기",
+  "description": "Complete Enterprise Resource Planning System for Copy Machine Business",
+  "repository": "https://github.com/ParkChongsam/awesome-flutter",
+  "keywords": ["flask", "erp", "python", "business", "inventory", "sales"],
+  "env": {
+    "FLASK_ENV": {
+      "description": "Flask environment",
+      "value": "production"
+    },
+    "SECRET_KEY": {
+      "description": "Secret key for session encryption",
+      "generator": "secret"
+    },
+    "COMPANY_NAME": {
+      "description": "Company name",
+      "value": "참좋은복사기"
+    },
+    "COMPANY_NAME_EN": {
+      "description": "Company name in English",
+      "value": "Very Good Copy Machine"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "addons": [
+    "heroku-postgresql:mini"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
